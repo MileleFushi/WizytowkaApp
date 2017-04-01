@@ -1,0 +1,2 @@
+# WizytowkaApp
+Projekt uczelniany
