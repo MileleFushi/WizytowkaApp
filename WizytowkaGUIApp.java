@@ -1,13 +1,12 @@
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.awt.event.KeyEvent;
+
+import javax.swing.JOptionPane;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -18,7 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 
-public class WizytowkaGUIVer2App extends Frame implements ActionListener{
+public class WizytowkaGUIVer3App extends Frame implements ActionListener{
 	
 	public String imie, plec, wiek;
 	public char pierwszaLiteraImienia;
@@ -28,19 +27,20 @@ public class WizytowkaGUIVer2App extends Frame implements ActionListener{
 	int wiekInt;
 	int wiekStan;
 	String opisKoncowy;
+	String stan = "button1";
 	
 	JFrame frmBotAdekVer;
 	JLabel LabelWitaj, LabelPytanieImie, LabelTlo;
 	JTextArea TextArea;
 	JTextField TextField;
-	JButton ButtonOk1, ButtonOk2, ButtonOk3, ButtonOk4;
+	JButton ButtonOk1, ButtonOk2, ButtonOk3;
 	
-
-	public WizytowkaGUIVer2App() {
+	/*KONSTRUKTOR*/
+	public WizytowkaGUIVer3App() {
 		
 		frmBotAdekVer = new JFrame();
 		frmBotAdekVer.setIconImage(Toolkit.getDefaultToolkit().getImage(WizytowkaGUIApp.class.getResource("/javax/swing/plaf/metal/icons/Question.gif")));
-		frmBotAdekVer.setTitle("Bot Adek ver. 2.0");
+		frmBotAdekVer.setTitle("Bot Adek ver. 3.0");
 		frmBotAdekVer.setBounds(100, 100, 450, 300);
 		frmBotAdekVer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmBotAdekVer.getContentPane().setLayout(null);
@@ -65,6 +65,19 @@ public class WizytowkaGUIVer2App extends Frame implements ActionListener{
 		TextField.setFont(new Font("Bookman Old Style", Font.PLAIN, 20));
 		TextField.setBounds(112, 153, 117, 39);
 		frmBotAdekVer.getContentPane().add(TextField);
+		TextField.addActionListener(new ActionListener(){
+
+            public void actionPerformed(ActionEvent e){
+
+            	if(stan == "button1"){
+            		ButtonOk1.doClick();
+            	}
+            	else if(stan == "button2"){
+            		ButtonOk2.doClick();
+            	}
+       	
+            }});
+		
 		
 		ButtonOk1 = new JButton("OK");
 		ButtonOk1.setBorder(null);
@@ -107,16 +120,20 @@ public class WizytowkaGUIVer2App extends Frame implements ActionListener{
 		LabelTlo.setBounds(0, -22, 434, 283);
 		frmBotAdekVer.getContentPane().add(LabelTlo);
 		
+		
 	}
 	
 	
-	// NACISNIECIE PRZYCISKU
-		public void actionPerformed(ActionEvent e){
-		  
+	/*NACISNIECIE PRZYCISKÓW OK1, OK2, OK3 I ZWIĄZANE Z TYM AKCJE*/
+	public void actionPerformed(ActionEvent e){
+			
+		try{
+			
 			Object source = e.getSource();
 		
 				if (source == ButtonOk1){
-	    	
+					
+					stan = "button1";
 					imie = TextField.getText();
 					TextField.setText("");
 					
@@ -129,8 +146,11 @@ public class WizytowkaGUIVer2App extends Frame implements ActionListener{
 					
 
 					LabelWitaj.setVisible(false);
+					frmBotAdekVer.remove(LabelWitaj);
 					LabelPytanieImie.setVisible(false);
+					frmBotAdekVer.remove(LabelPytanieImie);
 					ButtonOk1.setVisible(false);
+					frmBotAdekVer.remove(ButtonOk1);
 					
 					if(plec == "mężczyzną") TextArea.setText( imieWielkaLitera+ "? Podoba mi się to imię!\n"
 							+ "A więc " +imieWielkaLitera+", "
@@ -142,18 +162,17 @@ public class WizytowkaGUIVer2App extends Frame implements ActionListener{
 							+ "ile masz lat? ^^"
 							+ "\nWstyd się przyznać, ale ja zostałem\nnapisany dopiero wczoraj, "
 							+ "\nwięc na pewno możesz czuć się starsza. :/");
+					
+					stan = "button2";
 				}
 				
 				
 				else if(source == ButtonOk2){
 					
+					stan = "button2";
 					wiek = TextField.getText();
 					TextField.setText("");
-					TextField.setVisible(false);
-					ButtonOk2.setVisible(false);
-					ButtonOk3.setVisible(true);
 					
-
 					if( wiek.charAt(0) > 47 && wiek.charAt(0) < 58 ){
 						
 						czyWiekToLiczba = 1;
@@ -217,10 +236,15 @@ public class WizytowkaGUIVer2App extends Frame implements ActionListener{
 					
 					else {}
 					
+					ButtonOk2.setVisible(false);
+					frmBotAdekVer.remove(ButtonOk2);
+					TextField.setVisible(false);
+					frmBotAdekVer.remove(TextField);
+					ButtonOk3.setVisible(true);
+					
 				}
 				
 				else if(source == ButtonOk3){
-					
 					
 					if( wiekStan == 1 ) TextArea.setText("	OPIS: \nMasz na imię " +imieWielkaLitera+ " i jesteś " +plec+ "."
 							+ " \nDowiedziałem się, że masz " +wiekInt+ " lat \ni naprawdę jestemw  podziwie, "
@@ -255,25 +279,38 @@ public class WizytowkaGUIVer2App extends Frame implements ActionListener{
 							+ "\nwiadomo, że chodzi mi o liczbę! :D ");
 					
 					ButtonOk3.setVisible(false);
+					frmBotAdekVer.remove(ButtonOk3);
 				}
 				
 				
-		}
-		
-	  
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					WizytowkaGUIVer2App window = new WizytowkaGUIVer2App();
-					window.frmBotAdekVer.setVisible(true);
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 			}
-		});
+			catch(StringIndexOutOfBoundsException oob){
+				
+				JOptionPane.showMessageDialog(null, "Najpierw wprowadz treść! :)", "Ostrzeżenie", JOptionPane.WARNING_MESSAGE);
+			}
+				
 	}
 	
+	/*public void keyPressed(KeyEvent e) {
+	    if (e.getKeyCode()==KeyEvent.VK_ENTER){
+	        System.out.println("Hello");
 
+	        JOptionPane.showMessageDialog(null , "You've Submitted the name ");
+	    }
+
+	}*/
+
+	public static void main(String[] args) {
+
+		try {
+			WizytowkaGUIVer3App window = new WizytowkaGUIVer3App();
+			window.frmBotAdekVer.setVisible(true);			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 }
+
